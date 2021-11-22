@@ -10,31 +10,31 @@ object C1 {
 //    performs the recursion. The function should expect
 //    arguments in the range of 1 to 1 Million.
 
-def collatz(n: Long) : Long =   calculateCollatz(n,0)
+        def collatz(n: Long) : Long =   calculateCollatz(n,0)
 
 
-def calculateCollatz(n: Long , steps: Int) : Int =
-{
+        def calculateCollatz(n: Long , steps: Int) : Int =
+        {
 
-    if(n == 1) 
-    {
-       steps
-    }
-    else
-    {
-        if( n % 2 == 0)
-        {    
-            val steps2 = steps + 1
-            calculateCollatz(n/2,steps2) 
+            if(n == 1) 
+            {
+            steps
+            }
+            else
+            {
+                if( n % 2 == 0)
+                {    
+                    val stepsHolder = steps + 1
+                    calculateCollatz(n/2,stepsHolder) 
+                }
+                else
+                {    
+                    val stepsHolder = steps + 1
+                    calculateCollatz( (3*n + 1 ),stepsHolder)  
+                }
+            } 
+
         }
-        else
-        {    
-            val steps2 = steps + 1
-            calculateCollatz( (3*n + 1 ),steps2)  
-        }
-    } 
-
-}
 
 //(2) Complete the collatz_max function below. It should
 //    calculate how many steps are needed for each number 
@@ -45,7 +45,17 @@ def calculateCollatz(n: Long , steps: Int) : Int =
 //    the maximum number of steps and the second is the 
 //    corresponding number.
 
-def collatz_max(bnd: Long) : (Long, Long) = ???
+    def collatz_max(bnd: Long) : (Long, Long) =
+    {
+        val listOfValues = for(n <-( 1 to bnd.toInt)) yield collatz(n)
+        val maxNumberOfSteps = listOfValues.max 
+        val numberThatTakesMaxNumberOfSteps = listOfValues.indexOf(maxNumberOfSteps).toLong + 1
+        
+        (maxNumberOfSteps, numberThatTakesMaxNumberOfSteps)
+        
+    }
+
+
 
 //(3) Implement a function that calculates the last_odd
 //    number in a collatz series.  For this implement an

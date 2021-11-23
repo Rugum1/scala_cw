@@ -18,7 +18,17 @@ val rstate_portfolio = List("PLD", "PSA", "AMT", "AIV", "AVB", "BXP", "CCI",
 import io.Source
 import scala.util._
 
-def get_january_data(symbol: String, year: Int) : List[String] = ???
+def get_january_data(symbol: String, year: Int) : List[String] =
+{
+   val dataInFile =  get_data(symbol)
+   dataInFile.filter( x => x.startsWith(year.toString))
+
+   dataInFile
+
+}
+
+def get_data(name: String) : List[String] = 
+     Source.fromFile(name)("ISO-8859-1").getLines.toList 
 
 
 // (2) From the output of the get_january_data function, the next function 

@@ -70,33 +70,24 @@ object C1 {
     
     def is_hard(n: Long) : Boolean = is_pow_of_two(3*n + 1)
    
-    def last_odd(n: Long) : Long = get_last_odd_number(n,0)
-
-
-    def get_last_odd_number(n: Long, lastOddNumber: Long) : Long = 
+    def last_odd(n: Long) : Long = 
     {
-        if(n == 1)
+        if(is_hard(n))
         {
-           lastOddNumber
+            n 
         }
-        else 
+        else
         {
-            if(n % 2 == 0 )
+            if(n % 2 == 0)
             {
-                get_last_odd_number(n/2,lastOddNumber)
+                last_odd(n/2)
             }
             else
             {
-                val oddNumber = n 
-                get_last_odd_number(3*n + 1, oddNumber)
+                last_odd(3*n + 1)
             }
         }
     }
-    
-
-    
-
-
 }
 
 

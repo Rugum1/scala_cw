@@ -70,7 +70,7 @@ object C1 {
     
     def is_hard(n: Long) : Boolean = is_pow_of_two(3*n + 1)
    
-    def last_odd(n: Long) : Long = get_last_odd_number(n)
+    def last_odd(n: Long) : Long = get_last_odd_number(n,0)
 
 
     def get_last_odd_number(n: Long, lastOddNumber: Long) : Long = 

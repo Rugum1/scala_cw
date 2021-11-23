@@ -66,11 +66,32 @@ object C1 {
 //    and also assume that the input of last_odd will not 
 //    be a power of 2.
 
-    def is_pow_of_two(n: Long) : Boolean = 
+    def is_pow_of_two(n: Long) : Boolean = (n&(n-1)) == 0 
     
-    def is_hard(n: Long) : Boolean = 
+    def is_hard(n: Long) : Boolean = is_pow_of_two(3*n + 1)
    
-    def last_odd(n: Long) : Long = 
+    def last_odd(n: Long) : Long = get_last_odd_number(n)
+
+
+    def get_last_odd_number(n: Long, lastOddNumber: Long) : Long = 
+    {
+        if(n == 1)
+        {
+           lastOddNumber
+        }
+        else 
+        {
+            if(n % 2 == 0 )
+            {
+                get_last_odd_number(n/2,lastOddNumber)
+            }
+            else
+            {
+                val oddNumber = n 
+                get_last_odd_number(3*n + 1, oddNumber)
+            }
+        }
+    }
     
 
     

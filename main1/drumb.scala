@@ -20,11 +20,9 @@ import scala.util._
 
 def get_january_data(symbol: String, year: Int) : List[String] =
 {
-   val dataInFile =  get_data(symbol)
-   dataInFile.filter( x => x.startsWith(year.toString))
+    val listOfvalues = get_data(symbol)
 
-   dataInFile
-
+    listOfValues
 }
 
 def get_data(name: String) : List[String] = 

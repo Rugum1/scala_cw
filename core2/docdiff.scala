@@ -28,7 +28,9 @@ def clean(s: String) : List[String] = {
 
 
 def occurrences(xs: List[String]): Map[String, Int] = 
-  xs.map(element =>(element, xs.count(otherElement => element == otherElement))).toMap
+{
+ xs.map(element =>(element, xs.count(otherElement => element == otherElement))).toMap
+}
 
 
 
@@ -38,8 +40,7 @@ def occurrences(xs: List[String]): Map[String, Int] =
 //    If a string does not occur in a document, the product is zero.
 //    The function finally sums up all products. 
 
-
-def prod(lst1: List[String], lst2: List[String]) : Int =??
+ //def prod(lst1: List[String], lst2: List[String]) : Int =???
 
 //(4) Complete the functions overlap and similarity. The overlap of
 //    two documents is calculated by the formula given in the assignment
@@ -47,15 +48,15 @@ def prod(lst1: List[String], lst2: List[String]) : Int =??
 //    of the cleaned strings (see (1)).  
 
 
-def overlap(lst1: List[String], lst2: List[String]) : Double = ???
-
-def similarity(s1: String, s2: String) : Double = ???
+// def overlap(lst1: List[String], lst2: List[String]) : Double = ???
+ 
+// def similarity(s1: String, s2: String) : Double = ???
 
 
 
 /* Test cases
 
-
+ 
 val list1 = List("a", "b", "b", "c", "d") 
 val list2 = List("d", "b", "d", "b", "d")
 

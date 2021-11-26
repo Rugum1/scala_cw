@@ -14,7 +14,11 @@ object C2 {
 //    The words should be Returned as a list of strings.
 
 
-def clean(s: String) : List[String] = ???
+def clean(s: String) : List[String] = {
+
+    val reg = """\w+""".r
+    reg.findAllIn(s).toList
+}
   
 
 
@@ -23,7 +27,9 @@ def clean(s: String) : List[String] = ???
 //    be calculated as a Map from strings to integers.
 
 
-def occurrences(xs: List[String]): Map[String, Int] = ???
+def occurrences(xs: List[String]): Map[String, Int] = 
+  xs.map(element =>(element, xs.count(otherElement => element == otherElement))).toMap
+
 
 
 //(3) This functions calculates the dot-product of two documents
@@ -33,8 +39,7 @@ def occurrences(xs: List[String]): Map[String, Int] = ???
 //    The function finally sums up all products. 
 
 
-def prod(lst1: List[String], lst2: List[String]) : Int = ???
-
+def prod(lst1: List[String], lst2: List[String]) : Int =??
 
 //(4) Complete the functions overlap and similarity. The overlap of
 //    two documents is calculated by the formula given in the assignment

@@ -40,7 +40,18 @@ def occurrences(xs: List[String]): Map[String, Int] =
 //    If a string does not occur in a document, the product is zero.
 //    The function finally sums up all products. 
 
- //def prod(lst1: List[String], lst2: List[String]) : Int =???
+
+ def prod(lst1: List[String], lst2: List[String]) : Int =
+ {
+      val map1 = occurrences(lst1)
+      val map2 = occurrences(lst2)
+
+     val map3 =  map1.map{ case (k, v) => (k, v * map2.getOrElse(k, 0)) }
+
+      map3.values.sum
+ }
+
+
 
 //(4) Complete the functions overlap and similarity. The overlap of
 //    two documents is calculated by the formula given in the assignment

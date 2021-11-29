@@ -60,7 +60,7 @@ def occurrences(xs: List[String]): Map[String, Int] =
 def overlap(lst1: List[String], lst2: List[String]) : Double =
 {
    val top = prod(lst1,lst2)
-   val doubleD1 = prod(lst1,lst2)
+   val doubleD1 = prod(lst1,lst1)
    val doubleD2 = prod(lst2,lst2) 
    val bottom = doubleD1.max(doubleD2)
     

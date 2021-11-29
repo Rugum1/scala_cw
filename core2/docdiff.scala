@@ -40,13 +40,12 @@ def occurrences(xs: List[String]): Map[String, Int] =
 //    If a string does not occur in a document, the product is zero.
 //    The function finally sums up all products. 
 
-
  def prod(lst1: List[String], lst2: List[String]) : Int =
  {
       val map1 = occurrences(lst1)
       val map2 = occurrences(lst2)
 
-     val map3 =  map1.map{ case (k, v) => (k, v * map2.getOrElse(k, 0)) }
+      val map3 =  map1.map{ case (k, v) => (k, v * map2.getOrElse(k, 0))}
 
       map3.values.sum
  }
@@ -58,10 +57,18 @@ def occurrences(xs: List[String]): Map[String, Int] =
 //    description. The similarity of two strings is given by the overlap
 //    of the cleaned strings (see (1)).  
 
-
-// def overlap(lst1: List[String], lst2: List[String]) : Double = ???
+def overlap(lst1: List[String], lst2: List[String]) : Double =
+{
+   val top = prod(lst1,lst2)
+   val doubleD1 = prod(lst1,lst2)
+   val doubleD2 = prod(lst2,lst2) 
+   val bottom = doubleD1.max(doubleD2)
+    
+    top.toFloat/bottom
+  
+}
  
-// def similarity(s1: String, s2: String) : Double = ???
+def similarity(s1: String, s2: String) : Double = ???
 
 
 

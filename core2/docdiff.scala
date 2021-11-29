@@ -64,7 +64,7 @@ def overlap(lst1: List[String], lst2: List[String]) : Double =
    val doubleD2 = prod(lst2,lst2) 
    val bottom = doubleD1.max(doubleD2)
     
-    top.toFloat/bottom
+    top.double/bottom.double
   
 }
  

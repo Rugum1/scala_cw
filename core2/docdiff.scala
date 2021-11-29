@@ -68,7 +68,7 @@ def overlap(lst1: List[String], lst2: List[String]) : Double =
   
 }
  
-def similarity(s1: String, s2: String) : Double = ???
+def similarity(s1: String, s2: String) : Double = overlap(clean(s1),clean(s2))
 
 
 

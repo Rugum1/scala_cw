@@ -59,7 +59,7 @@ def get_first_price(symbol: String, year: Int) : Option[Double] =
 def get_prices(portfolio: List[String], years: Range) : List[List[Option[Double]]] = 
 {   
     val listOfYears = years.toList 
-    val listOfPrices = portfolio.map(element =>  for(year <- listOfYears) yield get_first_price(element,year))
+    val listOfPrices = listOfYears.map(year =>  for(symbol<- portfolio) yield get_first_price(symbol,year))
 
     listOfPrices
 }

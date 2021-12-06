@@ -80,7 +80,12 @@ def get_delta(price_old: Option[Double], price_new: Option[Double]) : Option[Dou
 //     portfolio). The input to this function are the nested lists created by 
 //     get_prices above.
 
-def get_deltas(data: List[List[Option[Double]]]) :  List[List[Option[Double]]] = ???
+def get_deltas(data: List[List[Option[Double]]]) :  List[List[Option[Double]]] = data match {
+    case first :: (second :: tail) => first.zip(second).map(element => get_delta(element._1,element._2)) :: tail 
+    case _ => Nil
+
+}
+
 
 
 

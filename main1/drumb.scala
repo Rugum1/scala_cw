@@ -81,8 +81,10 @@ def get_delta(price_old: Option[Double], price_new: Option[Double]) : Option[Dou
 //     get_prices above.
 
 def get_deltas(data: List[List[Option[Double]]]) :  List[List[Option[Double]]] = data match {
+    case List(None) :: tail => List(None) :: tail 
+    case _ :: List(None) :: tail => List(None) :: tail 
     case first :: (second :: tail) => first.zip(second).map(element => get_delta(element._1,element._2)) :: tail 
-    case _ => Nil
+    //case first :: (second :: tail) if (first) => Nil
 
 }
 

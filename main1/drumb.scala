@@ -87,11 +87,7 @@
          case first :: second :: rest =>  first.zip(second).map(element => get_delta(element._1,element._2)) :: get_deltas(second :: rest)
          case tail :: Nil =>  Nil  
 
-        // case first :: tail :: Nil => first.zip(tail).map(element => get_delta(element._1,element._2)) :: Nil
-        //case first :: (second :: tail) if (first) => Nil
-            
-    
-    }
+     }
 
 
 
@@ -100,7 +96,14 @@
     //     calculates the yearly yield, i.e. new balance, according to our dumb investment 
     //     strategy. Index points to a year in the data list.
 
-    def yearly_yield(data: List[List[Option[Double]]], balance: Long, index: Int) : Long = ???
+    def yearly_yield(data: List[List[Option[Double]]], balance: Long, index: Int) : Long = 
+    {
+         
+        val resultArray = data.lift(index).get.map(element => (element.get * (balance/ data.lift(index).get.size)).toLong)
+        
+        balance + resultArray.sum
+           
+    }
 
 
     // (7) Write a function compound_yield that calculates the overall balance for a 

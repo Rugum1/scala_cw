@@ -94,9 +94,9 @@ def syard(toks: Toks, st: Toks = Nil, out: Toks = Nil) : Toks = toks match {
 //C3a.syard(C3a.split("9 + 24 / ( 7 - 3 )")) // 9 24 7 3 - / +
 
 //C3a.syard(C3a.split("3 + 4 + 5"))           // 3 4 + 5 +
-//syard(split("( ( 3 + 4 ) + 5 )"))    // 3 4 + 5 +
-//syard(split("( 3 + ( 4 + 5 ) )"))    // 3 4 5 + +
-//syard(split("( ( ( 3 ) ) + ( ( 4 + ( 5 ) ) ) )")) // 3 4 5 + +
+//C3a.syard(C3a.split("( ( 3 + 4 ) + 5 )"))    // 3 4 + 5 +
+//C3a.syard(C3a.split("( 3 + ( 4 + 5 ) )"))    // 3 4 5 + +
+//C3a.syard(C3a.split("( ( ( 3 ) ) + ( ( 4 + ( 5 ) ) ) )")) // 3 4 5 + +
 
  
 // (2) Implement a compute function that evaluates an input list
@@ -106,16 +106,39 @@ def syard(toks: Toks, st: Toks = Nil, out: Toks = Nil) : Toks = toks match {
 // this function will be only called with proper postfix 
 // expressions.    
 
-def compute(toks: Toks, st: List[Int] = Nil) : Int = ???
+def calculate(firstElement : Int, secondElement : Int, symbol : String): Int =  symbol match 
+{
+	case "+" => firstElement + secondElement
+	case "-" => firstElement - secondElement
+	case "*" => firstElement * secondElement
+	case "/" => firstElement / secondElement
+}
+
+
+def pop_two_elements(st: List[Int], symbol : String) : Int = st match 
+{
+    case Nil => 0
+	case firstElement :: secondElement :: Nil => calculate(firstElement, secondElement,symbol)
+	case firstElement :: secondElement :: rest => pop_two_elements(secondElement :: rest, symbol)
+}
+
+
+def compute(toks: Toks, st: List[Int] = Nil) : Int = toks match {
+
+	case Nil => st.head 
+	case element :: rest if isAllDigits(element) => compute(rest,st ::: element.toInt :: Nil)
+	case element :: rest if is_op(element) => compute(rest, st.dropRight(2) ::: pop_two_elements(st,element):: Nil)
+
+}
 
 
 // test cases
-// compute(syard(split("3 + 4 * ( 2 - 1 )")))  // 7
-// compute(syard(split("10 + 12 * 33")))       // 406
-// compute(syard(split("( 5 + 7 ) * 2")))      // 24
-// compute(syard(split("5 + 7 / 2")))          // 8
-// compute(syard(split("5 * 7 / 2")))          // 17
-// compute(syard(split("9 + 24 / ( 7 - 3 )"))) // 15
+// C3a.compute(C3a.syard(C3a.split("3 + 4 * ( 2 - 1 )")))  // 7
+// C3a.compute(C3a.syard(C3a.split("10 + 12 * 33")))       // 406
+// C3a.compute(C3a.syard(C3a.split("( 5 + 7 ) * 2")))      // 24
+// C3a.compute(C3a.syard(C3a.split("5 + 7 / 2")))          // 8
+// C3a.compute(C3a.syard(C3a.split("5 * 7 / 2")))          // 17
+// C3a.compute(C3a.syard(C3a.split("9 + 24 / ( 7 - 3 )"))) // 15
 
 }
 

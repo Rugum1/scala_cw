@@ -20,7 +20,7 @@ import scala.util._
  
 
 
-def get_csv_url(url: String) : List[String] = Source.fromURL(url).getLines.toList.drop(1)
+def get_csv_url(url: String) : List[String] = Try(Source.fromURL(url).getLines.toList.drop(1)).getOrElse(List())
 
 
 
@@ -45,9 +45,16 @@ val movies_url = """https://nms.kcl.ac.uk/christian.urban/movies.csv"""
 //     the argument lines, will be the output of the function get_csv_url.
 
 
-def process_ratings(lines: List[String]) : List[(String, String)] = ???
+def process_ratings(lines: List[String]) : List[(String, String)] = 
+{
+    lines.filter( element => element.split(',').toList.lift(2).get.toInt >= 4)
+         .map(element => (element.split(',').toList.lift(0).get, element.split(',').toList.lift(1).get))
+}
 
-def process_movies(lines: List[String]) : List[(String, String)] = ???
+def process_movies(lines: List[String]) : List[(String, String)] =
+{
+    lines.map(element => (element.split(',').toList.lift(0).get, element.split(',').toList.lift(1).get))
+}
 
 
 // testcases

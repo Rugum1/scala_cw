@@ -99,12 +99,13 @@ def get_symbols_popped_from_stack(st: Toks , symbol : String,symbols_popped : To
 }
 
   def syard(toks: Toks, st: Toks = Nil, out: Toks = Nil) : Toks = toks match {
-    
+  
+   
 	case Nil => out ::: st 
 	case element :: rest if isAllDigits(element) => syard(rest,st,out ::: element :: Nil)
-  case element :: rest if (is_op(element) && assoc(element) == RA && precRightAssoc(element,get_head(st))) => syard(rest,pop_symbols_from_stack(st,element) ::: element :: Nil ,out ::: get_symbols_popped_from_stack(st,element,List()))
+  case element :: rest if (is_op(element) && assoc(element) == RA && precRightAssoc(element,get_head(st))) => syard(rest, element :: pop_symbols_from_stack(st,element)  ,out ::: get_symbols_popped_from_stack(st,element,List()))
   case element :: rest if (is_op(element) && assoc(element) == RA && precRightAssoc(element,get_head(st)) == false ) => syard(rest,element :: st, out)
-  case element :: rest if (is_op(element) && assoc(element) == LA && precLeftAssoc(element,get_head(st))) => syard(rest,pop_symbols_from_stack(st,element) ::: element :: Nil ,out ::: get_symbols_popped_from_stack(st,element,List()))
+  case element :: rest if (is_op(element) && assoc(element) == LA && precLeftAssoc(element,get_head(st))) => syard(rest, element :: pop_symbols_from_stack(st,element) ,out ::: get_symbols_popped_from_stack(st,element,List()))
   case element :: rest if (is_op(element) && assoc(element) == LA && precLeftAssoc(element,get_head(st)) == false ) => syard(rest,element :: st, out)
 	case element :: rest if (left_parentheses.contains(element)) => syard(rest, element :: st , out)
 	case element :: rest if (right_parentheses.contains(element)) => syard(rest, pop_elements(st,parentheses.get(element).get),out ::: get_popped_elements(st,parentheses.get(element).get)  )

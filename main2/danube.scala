@@ -105,7 +105,12 @@ def groupById(ratings: List[(String, String)],
 //     otherwise it might happen we recommend the same movie).
 
 
-def favourites(m: Map[String, List[String]], mov: String) : List[List[String]] = ???
+def favourites(m: Map[String, List[String]], mov: String) : List[List[String]] =
+{
+    m.filter(map_element => map_element._2.contains(mov))
+     .map(map_element => map_element._2.withFilter(list_element => list_element != mov)
+     .map(list_element => list_element)).toList
+}
 
 
 // testcases

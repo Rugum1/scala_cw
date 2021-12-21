@@ -50,7 +50,19 @@ def split(s: String) : Toks = s.split(" ").toList
 def is_op(op: String) : Boolean = ops.contains(op)
 	
 
-def prec(op1: String, op2: String) : Boolean = precs.get(op1).get > precs.get(op2).getOrElse(0)
+def prec(op1: String, op2: String) : Boolean = 
+{
+	if ( precs.get(op1).get  > precs.get(op2).getOrElse(0) ) 
+    {
+       false 
+    }
+    else 
+    {
+      
+      true 
+    
+    }
+}
 
 
 def isAllDigits(x: String) = x forall Character.isDigit 
@@ -70,13 +82,26 @@ def pop_elements(st: Toks,left_parentheses : String) : Toks = st match {
 
 def get_popped_elements(st: Toks,left_parentheses : String) : Toks = st.dropRight(st.length - st.indexOf(left_parentheses))
 
+def pop_symbols_from_stack(st: Toks, symbol : String) : Toks = st match 
+{
+   case Nil => st  
+   case element :: rest if  prec(symbol,element)  => pop_symbols_from_stack(rest,symbol)
+   case element :: rest if   prec(symbol,element) == false  => st 
+}
+
+def get_symbols_popped_from_stack(st: Toks , symbol : String,symbols_popped : Toks = Nil ) : Toks = st match 
+{
+   case Nil => symbols_popped
+   case element :: rest if  prec(symbol,element)  =>  get_symbols_popped_from_stack(rest,symbol, symbols_popped ::: element :: Nil)
+   case element :: rest if  prec(symbol,element) == false  => symbols_popped
+}
 
 def syard(toks: Toks, st: Toks = Nil, out: Toks = Nil) : Toks = toks match {
     
 	case Nil => out ::: st 
 	case element :: rest if isAllDigits(element) => syard(rest,st,out ::: element :: Nil)
-	case element :: rest if (is_op(element) && prec(element,get_head(st)) )  => syard(rest,element :: st, out)
-	case element :: rest if (is_op(element) && prec(element,get_head(st) ) == false ) => syard(rest,element :: Nil,out ::: st)
+	case element :: rest if (is_op(element) && prec(element,get_head(st)) )  => syard(rest, element :: pop_symbols_from_stack(st,element) ,out ::: get_symbols_popped_from_stack(st,element,List()))
+	case element :: rest if (is_op(element) && prec(element,get_head(st) ) == false ) => syard(rest,element :: st, out)
 	case element :: rest if (left_parentheses.contains(element)) => syard(rest, element :: st , out)
 	case element :: rest if (right_parentheses.contains(element)) => syard(rest, pop_elements(st,parentheses.get(element).get),out ::: get_popped_elements(st,parentheses.get(element).get)  )
 	  

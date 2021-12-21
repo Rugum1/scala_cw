@@ -75,7 +75,11 @@ def process_movies(lines: List[String]) : List[(String, String)] =
 //     is set to Map() at the beginning of the calculation.
 
 def groupById(ratings: List[(String, String)], 
-              m: Map[String, List[String]]) : Map[String, List[String]] = ???
+              m: Map[String, List[String]]) : Map[String, List[String]] = ratings match 
+              {
+                  case Nil => m 
+                  case element :: tail => groupById(tail, (m + (element._1 ->  (element._2 :: m.getOrElse(element._1, List())))))
+              }
 
 
 // testcases

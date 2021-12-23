@@ -140,12 +140,10 @@ def suggestions(recs: Map[String, List[String]],
 
 
                  listOfAllMovies.groupBy(element => element).map(element => (element._1, element._2.toList.length)).toList 
+                                .sortBy(_._1.toInt)
                                 .sortBy(_._2)(Ordering[Int].reverse)
                                 .filter(element => element._1 != mov_name)
-                                .map(element => element._1)
-                                
-                                 
-                        
+                                .map(element => element._1)  
                         
                 }
 
@@ -166,7 +164,26 @@ def suggestions(recs: Map[String, List[String]],
 
 def recommendations(recs: Map[String, List[String]],
                     movs: Map[String, String],
-                    mov_name: String) : List[String] = ???
+                    mov_name: String) : List[String] = 
+                    {
+                        val movies = suggestions(recs,mov_name)
+
+                        if(movies.length == 0)
+                        {
+                            List() 
+                        } 
+                        else 
+                        {
+                            if(movies.length == 1)
+                            {
+                                List(movs(movies.lift(0).get)) 
+                            }
+                            else 
+                            {
+                                List(movs(movies.lift(0).get),movs(movies.lift(1).get))
+                            }
+                        }
+                    }
 
 
 

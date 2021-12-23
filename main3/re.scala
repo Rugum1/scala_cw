@@ -58,7 +58,6 @@ def nullable (r: Rexp) : Boolean = r match
   case ALTs(element :: rest) =>  nullable(element) || nullable(ALTs(rest)) 
   case SEQ(r1, r2) => nullable(r1) && nullable(r2)
   case STAR(r) => true  
- 
 }
 
 
@@ -69,7 +68,19 @@ def nullable (r: Rexp) : Boolean = r match
 // function calculates the derivative of a 
 // regular expression w.r.t. a character.
 
-def der (c: Char, r: Rexp) : Rexp = ???
+def der (c: Char, r: Rexp) : Rexp = r match 
+{ 
+  case ALTs(Nil) => ZERO
+  case ZERO => ZERO
+  case ONE => ZERO 
+  case CHAR(d) if(d == c) => ONE
+  case CHAR(d) if(d != c) => ZERO 
+  case ALTs(expressions) => ALTs(for(expression <- expressions) yield der(c,expression))
+  case SEQ(r1,r2) if( nullable(r1)) => ALT(SEQ(der(c,r1), r2) ,der(c,r2)) 
+  case SEQ(r1,r2) if( nullable(r1)==false) => SEQ(der(c,r1),r2)
+  case STAR(r) => SEQ(der(c,r),STAR(r))
+  
+}
 
 
 // (3) Implement the flatten function flts. It

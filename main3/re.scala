@@ -52,6 +52,8 @@ implicit def stringOps (s: String) = new {
 def nullable (r: Rexp) : Boolean = ???
 
 
+
+
 // (2) Complete the function der according to
 // the definition given in the coursework; this
 // function calculates the derivative of a 

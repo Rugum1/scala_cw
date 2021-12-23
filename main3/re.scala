@@ -50,13 +50,12 @@ implicit def stringOps (s: String) = new {
 // accordingly.
 
 def nullable (r: Rexp) : Boolean = r match 
-{
+{ 
+  case ALTs(Nil) => false 
   case ONE => true  
   case ZERO => false 
   case CHAR(_) => false 
-  case ALTs( ONE ::  _ ) => true 
-  case ALTs( _ :: ONE :: rest) => true 
-  case ALTs(_) => false 
+  case ALTs(element :: rest) =>  nullable(element) || nullable(ALTs(rest)) 
   case SEQ(r1, r2) => nullable(r1) && nullable(r2)
   case STAR(r) => true  
  

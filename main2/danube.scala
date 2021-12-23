@@ -132,8 +132,22 @@ def favourites(m: Map[String, List[String]], mov: String) : List[List[String]] =
 //     movies sorted according to the most frequently suggested movie(s) first.
 
 def suggestions(recs: Map[String, List[String]], 
-                mov_name: String) : List[String] = ???
+                mov_name: String) : List[String] = 
+                {
+                 val listOfAllMovies =  recs.filter( element => element._2.contains(mov_name))
+                                            .map(element => element._2).flatten
 
+
+
+                 listOfAllMovies.groupBy(element => element).map(element => (element._1, element._2.toList.length)).toList 
+                                .sortBy(_._2)(Ordering[Int].reverse)
+                                .filter(element => element._1 != mov_name)
+                                .map(element => element._1)
+                                
+                                 
+                        
+                        
+                }
 
 // testcases
 //-----------

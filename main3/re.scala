@@ -152,7 +152,15 @@ def matcher(r: Rexp, s: String): Boolean = nullable(ders(s.toList,r))
 // expressions according to the specification 
 // given in the coursework.
 
-def size(r: Rexp): Int = ???
+def size(r: Rexp): Int = r match 
+{
+  case ZERO => 1   
+  case ONE => 1
+  case CHAR(_) => 1
+  case ALTs(elements) => 1 + (for(element <- elements) yield size(element)).sum 
+  case SEQ(r1,r2) => 1 + size(r1) + size(r2)
+  case STAR(r) => 1 + size(r)
+}
 
 
 // some testing data

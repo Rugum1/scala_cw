@@ -88,7 +88,13 @@ def der (c: Char, r: Rexp) : Rexp = r match
 // and also 'spills out', or flattens, nested 
 // ALTernativeS.
 
-def flts(rs: List[Rexp]) : List[Rexp] = ???
+def flts(rs: List[Rexp]) : List[Rexp] = rs match 
+{
+    case List() => List()
+    case ZERO :: rest => flts(rest)
+    case ALTs(rs1) :: rest =>  rs1 ::: flts(rest) 
+    case r :: rest => r :: flts(rest)
+}
 
 
 
@@ -100,7 +106,36 @@ def flts(rs: List[Rexp]) : List[Rexp] = ???
 // STAR-regular expressions. Use the _.distinct and 
 // flts functions.
 
-def simp(r: Rexp) : Rexp = ???
+def simp(r: Rexp) : Rexp = r match 
+{  
+
+  case ONE => ONE 
+  case ZERO => ZERO 
+  case CHAR(a) => CHAR(a)
+  case STAR(element) => STAR(element)
+  case SEQ(r1, r2) => (simp(r1),simp(r2)) match {
+    case (r1,ZERO) => ZERO 
+    case (ZERO,r2) => ZERO 
+    case (r1,ONE) => r1 
+    case (ONE,r2) => r2
+    case (ALTs(elements),r2) => SEQ(simp(ALTs(elements)),r2) 
+    case (r1,ALTs(elements)) => SEQ(r1,simp(ALTs(elements)))
+    case (r1,r2) => SEQ(r1,r2)
+  }
+  case ALTs(elements) => flts((for(element <- elements)  yield  simp(element))).distinct match 
+  {
+   case Nil => ZERO 
+   case  r :: Nil => r
+   case rs  => ALTs(rs) 
+  }
+  
+  
+
+  
+  
+}
+
+
 
 
 // (5) Complete the two functions below; the first 

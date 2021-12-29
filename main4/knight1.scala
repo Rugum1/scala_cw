@@ -54,9 +54,21 @@ def legal_moves(dim: Int, path: Path, x: Pos) : List[Pos] =
 //    given path. The first function counts all possible tours, 
 //    and the second collects all tours in a list of paths.
 
-def count_tours(dim: Int, path: Path) : Int = ???
+def count_tours(dim: Int, path: Path) : Int = path match 
+{    
+    
+    case elements if(path.length == dim*dim && !legal_moves(dim,path,path.head).contains(path.tail)) =>  1
+    case elements => (for( position <- legal_moves(dim,path,path.head)) yield count_tours(dim, position :: path)).toList.sum 
+   
+}  
 
-def enum_tours(dim: Int, path: Path) : List[Path] = ???
+
+
+def enum_tours(dim: Int, path: Path) : List[Path] = path match 
+{ 
+    case elements if(path.length == dim*dim && !legal_moves(dim,path,path.head).contains(path.tail)) => path :: Nil 
+    case elements => (for( position <- legal_moves(dim,path,path.head)) yield enum_tours(dim, position :: path)).toList.flatten 
+}
 
 
 //(4) Implement a first-function that finds the first 
@@ -64,7 +76,12 @@ def enum_tours(dim: Int, path: Path) : List[Path] = ???
 //    In that case Return f(x), otherwise None. If possible,
 //    calculate f(x) only once.
 
-def first(xs: List[Pos], f: Pos => Option[Path]) : Option[Path] = ???
+def first(xs: List[Pos], f: Pos => Option[Path]) : Option[Path] =  xs match 
+{
+  case Nil => None 
+  case x :: xs  if(f(x) != None) => f(x)
+  case x :: xs => first(xs,f) 
+}
 
 
 // testcases
@@ -79,8 +96,15 @@ def first(xs: List[Pos], f: Pos => Option[Path]) : Option[Path] = ???
 //    trying out onward moves, and searches recursively for a
 //    knight tour on a dim * dim-board.
 
-def first_tour(dim: Int, path: Path) : Option[Path] = ???
- 
+def get_elements(x : (Int,Int)) = if(x != None) Some(List(x)) else None  
+
+def first_tour(dim: Int, path: Path) : Option[Path] = path match
+{  
+  
+   case elements if(path.length == dim*dim) => Option(path)
+   case elements if(legal_moves(dim,path,path.head) != List() )=> first_tour(dim, first(legal_moves(dim,path,path.head),get_elements).toList.flatten ::: path) 
+   case elements => Option(path)
+}
 
 
 /* Helper functions

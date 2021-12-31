@@ -20,8 +20,30 @@ type Path = List[Pos]    // a path...a list of positions
 //    rule. That means moves with the fewest legal onward moves 
 //    should come first.
 
+def is_legal(dim: Int, path: Path, x: Pos) : Boolean = 
+{
+  path.contains(x) == false && x._1 < dim && x._2 < dim && x._1 >=0 && x._2 >=0 
+}
 
-def ordered_moves(dim: Int, path: Path, x: Pos) : List[Pos] = ???
+def legal_moves(dim: Int, path: Path, x: Pos) : List[Pos] = 
+{
+    val x_positions = x._1 + 1 :: x._1 + 2 :: x._1 + 2 :: x._1 + 1 :: x._1 - 1 :: x._1 -2 :: x._1 -2 :: x._1 - 1 :: Nil 
+    val y_positions = x._2 + 2 :: x._2 + 1 :: x._2 - 1 :: x._2 -2 :: x._2 -2 :: x._2 -1 :: x._2 + 1  :: x._2 + 2 :: Nil 
+
+    val all_possible_moves =  x_positions zip y_positions
+    
+    all_possible_moves.filter(position => is_legal(dim,path,position))
+
+}
+
+def ordered_moves(dim: Int, path: Path, x: Pos) : List[Pos] = 
+{
+    val moves = legal_moves(dim,path,path.head)
+
+    moves.sortBy(element => legal_moves(dim,List(element),element).length)
+}
+
+
 
 
 //(7) Complete the function that searches for a single *closed* 
@@ -29,14 +51,43 @@ def ordered_moves(dim: Int, path: Path, x: Pos) : List[Pos] = ???
 //    function will be tested on a 6 x 6 board. 
 
 
-def first_closed_tour_heuristics(dim: Int, path: Path) : Option[Path] = ???
+def first(xs: List[Pos], f: Pos => Option[Path]) : Option[Path] =  xs match 
+{
+  
+  case Nil => None;
+	case position::xs => {
+		val value = f(position)
+		if(value != None){
+			
+			value;
+		
+		} else {
+			
+			first(xs,f);
+		}
+	}
+
+
+}
+
+
+def first_closed_tour_heuristics(dim: Int, path: Path) : Option[Path] = path match 
+{
+     case elements if(path.length == dim * dim && legal_moves(dim, path.last :: Nil ,path.last).contains(path.head)) => Some(path)
+     case elements => first(ordered_moves(dim,path,path.head), (position:Pos)=>first_closed_tour_heuristics(dim,position::path))
+    
+}
 
 
 //(8) Same as (7) but searches for *non-closed* tours. This 
 //    version of the function will be called with dimensions of 
 //    up to 30 * 30.
 
-def first_tour_heuristics(dim: Int, path: Path) : Option[Path] = ???
+def first_tour_heuristics(dim: Int, path: Path) : Option[Path] =  path match 
+{
+     case elements if(path.length == dim * dim ) => Some(path)
+     case elements => first(ordered_moves(dim,path,path.head), (position:Pos)=>first_tour_heuristics(dim,position::path))
+}
 
 
 

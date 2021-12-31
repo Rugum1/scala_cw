@@ -56,12 +56,10 @@ def legal_moves(dim: Int, path: Path, x: Pos) : List[Pos] =
 
 def count_tours(dim: Int, path: Path) : Int = path match 
 {    
-    
     case elements if(path.length == dim*dim && !legal_moves(dim,path,path.head).contains(path.tail)) =>  1
     case elements => (for( position <- legal_moves(dim,path,path.head)) yield count_tours(dim, position :: path)).toList.sum 
    
 }  
-
 
 
 def enum_tours(dim: Int, path: Path) : List[Path] = path match 
@@ -78,9 +76,21 @@ def enum_tours(dim: Int, path: Path) : List[Path] = path match
 
 def first(xs: List[Pos], f: Pos => Option[Path]) : Option[Path] =  xs match 
 {
-  case Nil => None 
-  case x :: xs  if(f(x) != None) => f(x)
-  case x :: xs => first(xs,f) 
+  
+  case Nil => None;
+	case position::xs => {
+		val value = f(position)
+		if(value != None){
+			
+			value;
+		
+		} else {
+			
+			first(xs,f);
+		}
+	}
+
+
 }
 
 
@@ -96,14 +106,11 @@ def first(xs: List[Pos], f: Pos => Option[Path]) : Option[Path] =  xs match
 //    trying out onward moves, and searches recursively for a
 //    knight tour on a dim * dim-board.
 
-def get_elements(x : (Int,Int)) = if(x != None) Some(List(x)) else None  
 
-def first_tour(dim: Int, path: Path) : Option[Path] = path match
-{  
-  
-   case elements if(path.length == dim*dim) => Option(path)
-   case elements if(legal_moves(dim,path,path.head) != List() )=> first_tour(dim, first(legal_moves(dim,path,path.head),get_elements).toList.flatten ::: path) 
-   case elements => Option(path)
+def first_tour(dim: Int, path: Path) : Option[Path] = path match 
+{   
+   case elements if(path.length == dim * dim) => Some(path)
+   case elements => first(legal_moves(dim,path,path.head), (position:Pos)=>first_tour(dim,position::path));
 }
 
 

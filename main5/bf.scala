@@ -19,7 +19,10 @@ type Mem = Map[Int, Int]
 import io.Source
 import scala.util._
 
-def load_bff(name: String) : String = ???
+def load_bff(name: String) : String = 
+{
+    Try(Source.fromFile("./" ++ name ++ ".bf").getLines.toString).getOrElse("");
+}
 
 
 

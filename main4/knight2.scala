@@ -31,6 +31,7 @@ def legal_moves(dim: Int, path: Path, x: Pos) : List[Pos] =
     val y_positions = x._2 + 2 :: x._2 + 1 :: x._2 - 1 :: x._2 -2 :: x._2 -2 :: x._2 -1 :: x._2 + 1  :: x._2 + 2 :: Nil 
 
     val all_possible_moves =  x_positions zip y_positions
+
     
     all_possible_moves.filter(position => is_legal(dim,path,position))
 
@@ -38,9 +39,11 @@ def legal_moves(dim: Int, path: Path, x: Pos) : List[Pos] =
 
 def ordered_moves(dim: Int, path: Path, x: Pos) : List[Pos] = 
 {
-    val moves = legal_moves(dim,path,path.head)
+    val moves = legal_moves(dim,path,x)
 
-    moves.sortBy(element => legal_moves(dim,List(element),element).length)
+    moves.map(element => (element, legal_moves(dim,path,element).length))
+         .sortBy(_._2)
+         .map(element => element._1)
 }
 
 

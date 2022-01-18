@@ -21,7 +21,7 @@ import scala.util._
 
 def load_bff(name: String) : String = 
 {
-    Try(Source.fromFile("./" ++ name ++ ".bf").getLines.toString).getOrElse("");
+    Try(Source.fromFile("./" ++ name).getLines.toList.mkString(" ")).getOrElse("");
 }
 
 
@@ -35,10 +35,10 @@ def load_bff(name: String) : String =
 // value v is stored.
 
 
-def sread(mem: Mem, mp: Int) : Int = ???
+def sread(mem: Mem, mp: Int) : Int = Try(mem(mp)).getOrElse(0)
 
-def write(mem: Mem, mp: Int, v: Int) : Mem = ???
 
+def write(mem: Mem, mp: Int, v: Int) : Mem = Try(mem + (mp -> v)).getOrElse(mem)
 
 
 // (3) Implement the two jumping instructions in the 
@@ -48,9 +48,25 @@ def write(mem: Mem, mp: Int, v: Int) : Mem = ???
 // jumpLeft implements the move to the left to just after
 // the *matching* [-command.
 
-def jumpRight(prog: String, pc: Int, level: Int) : Int = ???
+def jumpRight(prog: String, pc: Int, level: Int) : Int = prog match 
+{   
+    case prog if(pc + 1 == prog.length && prog.charAt(pc) != ']') => prog.length  
+    case prog if(pc == 0) => jumpRight(prog,pc+1,level)
+    case prog if(prog.charAt(pc) != ']' && prog.charAt(pc) != '[') => jumpRight(prog,pc+ 1,level)
+    case prog if(prog.charAt(pc) == '[' ) => jumpRight(prog,pc+ 1,level+ 1)
+    case prog if(level!=0 && prog.charAt(pc) == ']') => jumpRight(prog,pc+ 1,level- 1)
+    case prog if(level == 0 && prog.charAt(pc) == ']') => pc + 1
+    
+}
 
-def jumpLeft(prog: String, pc: Int, level: Int) : Int = ???
+def jumpLeft(prog: String, pc: Int, level: Int) : Int = prog match 
+{ 
+   case prog if(pc < 0 ) => pc 
+   case prog if(prog.charAt(pc) != '[' && prog.charAt(pc) != ']' && prog.charAt(pc-1) == '[' && level == 0) => pc 
+   case prog if(prog.charAt(pc) == ']') => jumpLeft(prog,pc-1,level+1) 
+   case prog if(prog.charAt(pc) != '[' && prog.charAt(pc) != ']') => jumpLeft(prog,pc-1,level)
+   case prog if(prog.charAt(pc) == '[') => jumpLeft(prog,pc-1,level-1) 
+}
 
 
 // testcases

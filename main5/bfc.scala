@@ -16,7 +16,7 @@ object M5b {
 //
 // Compiler, even real ones, are fiendishly difficult to get
 // to produce correct code. One way to debug them is to run
-// example programs ``unoptimised''; and then optimised. Does
+// example pgrams ``unoptimised''; and then optimised. Does
 // the optimised version still produce the same result?
 
 
@@ -39,13 +39,13 @@ import scala.util._
 //=======
 
 // (5) Write a function jtable that precomputes the "jump
-//     table" for a bf-program. This function takes a bf-program 
+//     table" for a bf-pgram. This function takes a bf-pgram 
 //     as an argument and Returns a Map[Int, Int]. The 
 //     purpose of this map is to record the information about
 //     pc positions where '[' or a ']' are stored. The information
 //     is to which pc-position do we need to jump next?
 // 
-//     For example for the program
+//     For example for the pgram
 //    
 //       "+++++[->++++++++++<]>--<+++[->>++++++++++<<]>>++<<----------[+>.>.<+<]"
 //
@@ -66,9 +66,34 @@ import scala.util._
 //     in order to take advantage of the information stored in the jtable. 
 //     This means whenever jumpLeft and jumpRight was called previously,
 //     you should immediately look up the jump address in the jtable.
+
+
+ def jumpRight(pg: String, pc: Int, level: Int) : Int = pg.charAt(pc) match {
+        
+        case _ if(pc+1 == pg.length) => pc + 1
+        case '[' => jumpRight(pg,pc+1,level+1)
+        case ']' => if(level  ==  0)  pc + 1 else jumpRight(pg,pc+1,level-1)
+        case _ => jumpRight(pg,pc+1,level)
+    }
+
+    def jumpLeft(pg: String, pc: Int, level: Int) : Int = pg.charAt(pc) match 
+    {            
+        case _ if(pc == 0 && level == 1) => pc - 1
+        case ']' => jumpLeft(pg,pc-1,level+1)
+        case '[' => if(level == 0) pc + 1 else jumpLeft(pg,pc-1,level-1)
+        case _   => jumpLeft(pg,pc-1,level)
+    }
  
 
-def jtable(pg: String) : Map[Int, Int] = ???
+def jtable(pg: String) : Map[Int, Int] = 
+{ 
+ 
+    val listOfString = pg.toList.zipWithIndex.filter(elements => elements._1 == '[' || elements._1 == ']')
+
+    listOfString.map{ case element if(element._1 == '[') => (element._2,jumpRight(pg,element._2 + 1,0))
+                      case element if(element._1 == ']') => (element._2,jumpLeft(pg,element._2 - 1,0))}.toMap 
+   
+}
 
 
 // testcase
@@ -77,8 +102,24 @@ def jtable(pg: String) : Map[Int, Int] = ???
 // =>  Map(69 -> 61, 5 -> 20, 60 -> 70, 27 -> 44, 43 -> 28, 19 -> 6)
 
 
-def compute2(pg: String, tb: Map[Int, Int], pc: Int, mp: Int, mem: Mem) : Mem = ???
-def run2(pg: String, m: Mem = Map()) = ???
+def compute2(pg: String, tb: Map[Int, Int], pc: Int, mp: Int, mem: Mem) : Mem = pg match 
+{
+  case pg  => if(Try(pg.charAt(pc)).getOrElse(0) == 0) mem 
+                     else pg.charAt(pc) match {
+                                    case'>'=>compute2(pg,tb,pc + 1, mp + 1,mem)
+                                    case'<'=>compute2(pg,tb,pc + 1, mp - 1,mem)
+                                    case'+'=>compute2(pg,tb,pc + 1, mp, write(mem,mp,sread(mem,mp) + 1))
+                                    case'-'=>compute2(pg,tb,pc + 1, mp, write(mem,mp,sread(mem,mp) - 1))
+                                    case'.'=>print(sread(mem,mp).toChar); 
+                                             compute2(pg,tb,pc + 1,mp,mem)
+                                    case'['=>if(sread(mem,mp)==0) 
+                                    compute2(pg,tb,tb(pc), mp, mem) else compute2(pg,tb,pc + 1,mp,mem)
+                                    case']'=>if(sread(mem,mp)!=0) compute2(pg,tb,tb(pc),mp,mem) else compute2(pg,tb,pc + 1,mp,mem)
+                                    case _ => compute2(pg,tb,pc + 1,mp, mem)
+                                    
+                                    }
+}
+def run2(pg: String, m: Mem = Map()) = compute2(pg,jtable(pg),0,0,m)
 
 
 // testcases

@@ -67,6 +67,14 @@ import scala.util._
 //     This means whenever jumpLeft and jumpRight was called previously,
 //     you should immediately look up the jump address in the jtable.
 
+def load_bff(name: String) : String = 
+    {
+        Try(Source.fromFile("./" ++ name).getLines.toList.mkString(" ")).getOrElse("");
+    }
+
+ def sread(mem: Mem, mp: Int) : Int = Try(mem(mp)).getOrElse(0)
+
+ def write(mem: Mem, mp: Int, v: Int) : Mem = Try(mem + (mp -> v)).getOrElse(mem)
 
  def jumpRight(pg: String, pc: Int, level: Int) : Int = pg.charAt(pc) match {
         

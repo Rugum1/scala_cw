@@ -30,6 +30,7 @@ def time_needed[T](n: Int, code: => T) = {
 
 
 type Mem = Map[Int, Int]
+val alphabeticalRange= 'A' to 'Z' 
 
 import io.Source
 import scala.util._
@@ -162,17 +163,17 @@ def compute3(pg: String, tb: Map[Int, Int], pc: Int, mp: Int, mem: Mem) : Mem = 
 {
   case pg  => if(Try(pg.charAt(pc)).getOrElse(0) == 0) mem 
                      else pg.charAt(pc) match {
-                                    case'>'=>compute2(pg,tb,pc + 1, mp + 1,mem)
-                                    case'<'=>compute2(pg,tb,pc + 1, mp - 1,mem)
-                                    case'+'=>compute2(pg,tb,pc + 1, mp, write(mem,mp,sread(mem,mp) + 1))
-                                    case'-'=>compute2(pg,tb,pc + 1, mp, write(mem,mp,sread(mem,mp) - 1))
+                                    case'>'=>compute3(pg,tb,pc + 1, mp + 1,mem)
+                                    case'<'=>compute3(pg,tb,pc + 1, mp - 1,mem)
+                                    case'+'=>compute3(pg,tb,pc + 1, mp, write(mem,mp,sread(mem,mp) + 1))
+                                    case'-'=>compute3(pg,tb,pc + 1, mp, write(mem,mp,sread(mem,mp) - 1))
                                     case'.'=>print(sread(mem,mp).toChar); 
-                                             compute2(pg,tb,pc + 1,mp,mem)
+                                             compute3(pg,tb,pc + 1,mp,mem)
                                     case'['=>if(sread(mem,mp)==0) 
-                                    compute2(pg,tb,tb(pc), mp, mem) else compute2(pg,tb,pc + 1,mp,mem)
-                                    case']'=>if(sread(mem,mp)!=0) compute2(pg,tb,tb(pc),mp,mem) else compute2(pg,tb,pc + 1,mp,mem)
-                                    case '0' => compute2(pg,tb,pc + 1,mp,write(mem,mp,0))
-                                    case _ => compute2(pg,tb,pc + 1,mp, mem)
+                                    compute3(pg,tb,tb(pc), mp, mem) else compute3(pg,tb,pc + 1,mp,mem)
+                                    case']'=>if(sread(mem,mp)!=0) compute3(pg,tb,tb(pc),mp,mem) else compute3(pg,tb,pc + 1,mp,mem)
+                                    case '0' => compute3(pg,tb,pc + 1,mp,write(mem,mp,0))
+                                    case _ => compute3(pg,tb,pc + 1,mp, mem)
                                     
                                     }
 }
@@ -211,19 +212,114 @@ def run3(pg: String, m: Mem = Map()) = compute3(pg,jtable(pg),0,0,m)
 //  appropriately with such two-character commands.
 
 
-def combine(s: String) : String = ???
+def getCombinedTable(s: String,pc : Int, first :Int, map : Map[Int,Int] ): Mem = s match 
+{
+  case s => if(Try(s.charAt(pc)).getOrElse(0) == 0) map 
+            else s.charAt(pc) match {
+                     
+                     case character if((pc - first + 1) == 26 && first != -1) =>  getCombinedTable(s,pc+1,-1,write(map,first, pc-first+1))
+                     case '0' => getCombinedTable(s,pc+1,first,map)
+                     case ']' => getCombinedTable(s,pc+1,first,map)
+                     case '[' => getCombinedTable(s,pc+1,first,map)
+                     case '.' => getCombinedTable(s,pc+1,first,map)
+                     case character if(Try(s.charAt(pc+1)).getOrElse(0) == character) => 
+                     if(first == -1)  getCombinedTable(s,pc+1,pc,map) else getCombinedTable(s,pc+1,first,map)
+                     case character if(Try(s.charAt(pc+1)).getOrElse(0) != character) => 
+                     if(Try(s.charAt(pc-1)).getOrElse(0) == character && first != -1)
+                     getCombinedTable(s,pc+1,-1,write(map,first, pc-first+1))
+                     else 
+                     getCombinedTable(s,pc+1,-1,write(map,pc,1))
+            }
+}
 
-// testcase
+
+def createCombinedString(s:String, s2: String, pc : Int, map: Map[Int,Int]): String = s match 
+{
+  case s => if(Try(s.charAt(pc)).getOrElse(0) == 0) s2
+            else s.charAt(pc) match { 
+              case '[' => createCombinedString(s,s2+'[',pc+1,map)
+              case ']' => createCombinedString(s,s2+']',pc+1,map)
+              case '.' => createCombinedString(s,s2+'.',pc+1,map)
+              case '0' => createCombinedString(s,s2+'0',pc+1,map)
+              case  character  => {
+              val alphabeticalRange = 'A' to 'Z'  
+              createCombinedString(s, s2 + (character + alphabeticalRange.lift(map(pc) - 1).get.toString) ,pc + map(pc),map)
+              }
+                    
+            }
+           
+}
+
+def combine(s: String) : String = createCombinedString(s,"",0,getCombinedTable(s,0,-1,Map()))
+
+
+// testcaseoptimise(load_bff("benchmark.bf")).length == 181
 // combine(load_bff("benchmark.bf"))
 
+//alphabeticalRange.indexOf(pg.charAt(pc+1)) + 1
+// def compute4(pg: String, tb: Map[Int, Int], pc: Int, mp: Int, mem: Mem) : Mem = pg match 
+// {
+//   case pg  => if(Try(pg.charAt(pc)).getOrElse(0) == 0) mem 
+//                      else pg.charAt(pc) match {
+//                                     case'>'=>compute4(pg,tb,pc + 1, mp + alphabeticalRange.indexOf(pg.charAt(pc+1)) + 1,mem)
+//                                     case'<'=>compute4(pg,tb,pc + 1, mp - alphabeticalRange.indexOf(pg.charAt(pc+1)) + 1,mem)
+//                                     case'+'=>compute4(pg,tb,pc + 1, mp, write(mem,mp,sread(mem,mp) + alphabeticalRange.indexOf(pg.charAt(pc+1)) + 1))
+//                                     case'-'=>compute4(pg,tb,pc + 1, mp, write(mem,mp,sread(mem,mp) - alphabeticalRange.indexOf(pg.charAt(pc+1)) + 1))
+//                                     case'.'=>print(sread(mem,mp).toChar); 
+//                                              compute4(pg,tb,pc + 1,mp,mem)
+//                                     case'['=>if(sread(mem,mp)==0) 
+//                                     compute4(pg,tb,tb(pc), mp, mem) else compute4(pg,tb,pc + 1,mp,mem)
+//                                     case']'=>if(sread(mem,mp)!=0) compute4(pg,tb,tb(pc),mp,mem) else compute4(pg,tb,pc + 1,mp,mem)
+//                                     case '0' => compute4(pg,tb,pc + 1,mp,write(mem,mp,0))
+//                                     case _ => compute4(pg,tb,pc + 1,mp, mem)
+                                    
+//                                     }
 
-def compute4(pg: String, tb: Map[Int, Int], pc: Int, mp: Int, mem: Mem) : Mem = ???
+// }
+
+def compute4(pg: String, tb: Map[Int, Int], pc: Int, mp: Int, mem: Mem) : Mem = pg match 
+
+{
+
+  case pg  => if(Try(pg.charAt(pc)).getOrElse(0) == 0) mem 
+
+  else pg.charAt(pc) match {
+
+    case'>'=>compute4(pg,tb,pc + 2, mp + alphabeticalRange.indexOf(pg(pc + 1)) + 1,mem)//I incremented with 3 to see if it loops 
+
+    case'<'=>compute4(pg,tb,pc + 2, mp - alphabeticalRange.indexOf(pg(pc + 1)) - 1,mem)
+
+    case'+'=>compute4(pg,tb,pc + 2, mp, write(mem,mp,sread(mem,mp) + alphabeticalRange.indexOf(pg(pc + 1))+1))
+
+    case'-'=>compute4(pg,tb,pc + 2, mp, write(mem,mp,sread(mem,mp) - alphabeticalRange.indexOf(pg(pc + 1))-1))
+
+    case'.'=>print(sread(mem,mp).toChar); 
+
+              compute4(pg,tb,pc + 1,mp,mem)
+
+    case'['=>if(sread(mem,mp)==0) 
+
+    compute4(pg,tb,tb(pc), mp, mem) else compute4(pg,tb,pc + 1,mp,mem)
+
+    case']'=>if(sread(mem,mp)!=0) compute4(pg,tb,tb(pc),mp,mem) else compute4(pg,tb,pc + 1,mp,mem)
+
+    case '0' => compute4(pg,tb,pc + 1,mp,write(mem,mp,0))
+
+    case _ => compute4(pg,tb,pc + 1,mp, mem)
+
+  }
+
+}
 
 
 // should call first optimise and then combine on the input string
 //
-def run4(pg: String, m: Mem = Map()) = ???
-
+def run4(pg: String, m: Mem = Map()) = 
+{
+ val combinedString = combine(optimise(pg))
+ val jTable = jtable(combinedString) 
+  compute4(combinedString,jTable,0,0,m)
+}
 
 // testcases
 // combine(optimise(load_bff("benchmark.bf"))) // => """>A+B[<A+M>A-A]<A[[....."""

@@ -14,6 +14,7 @@ case class STAR(r: Rexp) extends Rexp             // star
 
 
 // some convenience for typing regular expressions
+//Init tests
 
 //the usual binary choice can be defined in terms of ALTs
 def ALT(r1: Rexp, r2: Rexp) = ALTs(List(r1, r2))

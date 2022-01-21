@@ -8,6 +8,7 @@ object M4a {
 // implement them, but do not make any changes to the
 // templates below. Also have a look whether the functions
 // at the end of the file are of any help.
+//Init tests
 
 
 

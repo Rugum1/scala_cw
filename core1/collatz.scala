@@ -9,6 +9,7 @@ object C1 {
 //    If needed, you can use an auxiliary function that
 //    performs the recursion. The function should expect
 //    arguments in the range of 1 to 1 Million.
+//Initialise tests 
 
         def collatz(n: Long) : Long =   calculateCollatz(n,0)
 

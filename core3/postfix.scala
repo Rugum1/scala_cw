@@ -1,6 +1,7 @@
 // Shunting Yard Algorithm
 // by Edsger Dijkstra
 // ========================
+//Init tests
 
 object C3a {
 

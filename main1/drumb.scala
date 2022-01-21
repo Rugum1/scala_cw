@@ -4,6 +4,7 @@
     object M1 {
 
     //two test portfolios
+    //Init tests
 
     val blchip_portfolio = List("GOOG", "AAPL", "MSFT", "IBM", "FB", "AMZN", "BIDU")
     val rstate_portfolio = List("PLD", "PSA", "AMT", "AIV", "AVB", "BXP", "CCI", 

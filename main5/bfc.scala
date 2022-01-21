@@ -18,7 +18,7 @@ object M5b {
 // to produce correct code. One way to debug them is to run
 // example pgrams ``unoptimised''; and then optimised. Does
 // the optimised version still produce the same result?
-
+//Init tests
 
 // for timing purposes
 def time_needed[T](n: Int, code: => T) = {

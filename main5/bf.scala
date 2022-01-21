@@ -15,6 +15,7 @@
     // and requests the corresponding file from disk. It returns the
     // content of the file as a String. If the file does not exists,
     // the function should return the empty string.
+    //Init tests
 
     import io.Source
     import scala.util._

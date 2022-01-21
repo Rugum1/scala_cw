@@ -12,7 +12,7 @@ object C2 {
 //         some_regex.findAllIn(some_string)
 //
 //    The words should be Returned as a list of strings.
-
+//Init tests
 
 def clean(s: String) : List[String] = {
 

@@ -21,10 +21,8 @@ type Path = List[Pos]    // a path...a list of positions
 //    function will be called with dimensions of up to 70 * 70
 //    and starting field (0, 0). It has to produce a solution within
 //    30 seconds.
+// Init tests
 
-// Core Part about finding a single tour for a board using the
-// Warnsdorf Rule
-//==============================================================
 
 
 def is_legal(dim: Int, path: Path, x: Pos) : Boolean = 

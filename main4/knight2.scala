@@ -19,6 +19,7 @@ type Path = List[Pos]    // a path...a list of positions
 //    moves like in (2) but orders them according to Warnsdorf’s 
 //    rule. That means moves with the fewest legal onward moves 
 //    should come first.
+//Init tests
 
 def is_legal(dim: Int, path: Path, x: Pos) : Boolean = 
 {

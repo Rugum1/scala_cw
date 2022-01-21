@@ -16,7 +16,7 @@ import scala.util._
 //     up into lines, and the first line should be dropped (that is without
 //     the header of the CSV-file). The result is a list of strings (lines
 //     in the file).
-
+// Init tests
  
 
 

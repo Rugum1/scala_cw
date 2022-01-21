@@ -86,7 +86,7 @@ def pop_symbols_from_stack(st: Toks, symbol : String) : Toks = st match
 {
    case Nil => st  
    case element :: rest if  prec(symbol,element)  => pop_symbols_from_stack(rest,symbol)
-   case element :: rest if   prec(symbol,element) == false  => st 
+   case element :: rest if   prec(symbol,element) == false) => st 
 }
 
 def get_symbols_popped_from_stack(st: Toks , symbol : String,symbols_popped : Toks = Nil ) : Toks = st match 

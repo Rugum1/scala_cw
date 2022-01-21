@@ -256,55 +256,21 @@ def combine(s: String) : String = createCombinedString(s,"",0,getCombinedTable(s
 // testcaseoptimise(load_bff("benchmark.bf")).length == 181
 // combine(load_bff("benchmark.bf"))
 
-//alphabeticalRange.indexOf(pg.charAt(pc+1)) + 1
-// def compute4(pg: String, tb: Map[Int, Int], pc: Int, mp: Int, mem: Mem) : Mem = pg match 
-// {
-//   case pg  => if(Try(pg.charAt(pc)).getOrElse(0) == 0) mem 
-//                      else pg.charAt(pc) match {
-//                                     case'>'=>compute4(pg,tb,pc + 1, mp + alphabeticalRange.indexOf(pg.charAt(pc+1)) + 1,mem)
-//                                     case'<'=>compute4(pg,tb,pc + 1, mp - alphabeticalRange.indexOf(pg.charAt(pc+1)) + 1,mem)
-//                                     case'+'=>compute4(pg,tb,pc + 1, mp, write(mem,mp,sread(mem,mp) + alphabeticalRange.indexOf(pg.charAt(pc+1)) + 1))
-//                                     case'-'=>compute4(pg,tb,pc + 1, mp, write(mem,mp,sread(mem,mp) - alphabeticalRange.indexOf(pg.charAt(pc+1)) + 1))
-//                                     case'.'=>print(sread(mem,mp).toChar); 
-//                                              compute4(pg,tb,pc + 1,mp,mem)
-//                                     case'['=>if(sread(mem,mp)==0) 
-//                                     compute4(pg,tb,tb(pc), mp, mem) else compute4(pg,tb,pc + 1,mp,mem)
-//                                     case']'=>if(sread(mem,mp)!=0) compute4(pg,tb,tb(pc),mp,mem) else compute4(pg,tb,pc + 1,mp,mem)
-//                                     case '0' => compute4(pg,tb,pc + 1,mp,write(mem,mp,0))
-//                                     case _ => compute4(pg,tb,pc + 1,mp, mem)
-                                    
-//                                     }
-
-// }
-
 def compute4(pg: String, tb: Map[Int, Int], pc: Int, mp: Int, mem: Mem) : Mem = pg match 
-
 {
-
   case pg  => if(Try(pg.charAt(pc)).getOrElse(0) == 0) mem 
-
   else pg.charAt(pc) match {
 
-    case'>'=>compute4(pg,tb,pc + 2, mp + alphabeticalRange.indexOf(pg(pc + 1)) + 1,mem)//I incremented with 3 to see if it loops 
-
+    case'>'=>compute4(pg,tb,pc + 2, mp + alphabeticalRange.indexOf(pg(pc + 1)) + 1,mem)
     case'<'=>compute4(pg,tb,pc + 2, mp - alphabeticalRange.indexOf(pg(pc + 1)) - 1,mem)
-
     case'+'=>compute4(pg,tb,pc + 2, mp, write(mem,mp,sread(mem,mp) + alphabeticalRange.indexOf(pg(pc + 1))+1))
-
     case'-'=>compute4(pg,tb,pc + 2, mp, write(mem,mp,sread(mem,mp) - alphabeticalRange.indexOf(pg(pc + 1))-1))
-
     case'.'=>print(sread(mem,mp).toChar); 
-
-              compute4(pg,tb,pc + 1,mp,mem)
-
+             compute4(pg,tb,pc + 1,mp,mem)
     case'['=>if(sread(mem,mp)==0) 
-
     compute4(pg,tb,tb(pc), mp, mem) else compute4(pg,tb,pc + 1,mp,mem)
-
     case']'=>if(sread(mem,mp)!=0) compute4(pg,tb,tb(pc),mp,mem) else compute4(pg,tb,pc + 1,mp,mem)
-
     case '0' => compute4(pg,tb,pc + 1,mp,write(mem,mp,0))
-
     case _ => compute4(pg,tb,pc + 1,mp, mem)
 
   }

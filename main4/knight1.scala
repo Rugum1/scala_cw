@@ -77,19 +77,12 @@ def enum_tours(dim: Int, path: Path) : List[Path] = path match
 def first(xs: List[Pos], f: Pos => Option[Path]) : Option[Path] =  xs match 
 {
   
-  case Nil => None;
-	case position::xs => {
-		val value = f(position)
-		if(value != None){
-			
-			value;
+  case Nil => None
+  case element::xs => {
+      val elementValue = f(element)
+      if(elementValue != None) elementValue else first(xs,f)
 		
-		} else {
-			
-			first(xs,f);
-		}
 	}
-
 
 }
 
@@ -106,11 +99,14 @@ def first(xs: List[Pos], f: Pos => Option[Path]) : Option[Path] =  xs match
 //    trying out onward moves, and searches recursively for a
 //    knight tour on a dim * dim-board.
 
+ 
 
 def first_tour(dim: Int, path: Path) : Option[Path] = path match 
 {   
+  
    case elements if(path.length == dim * dim) => Some(path)
-   case elements => first(legal_moves(dim,path,path.head), (position:Pos)=>first_tour(dim,position::path));
+   case elements => first(legal_moves(dim,path,path.head), (position:Pos)=>first_tour(dim,position::path))
+
 }
 
 

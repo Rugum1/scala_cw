@@ -56,21 +56,12 @@ def ordered_moves(dim: Int, path: Path, x: Pos) : List[Pos] =
 
 def first(xs: List[Pos], f: Pos => Option[Path]) : Option[Path] =  xs match 
 {
-  
-  case Nil => None;
-	case position::xs => {
-		val value = f(position)
-		if(value != None){
-			
-			value;
+  case Nil => None
+  case element::xs => {
+      val elementValue = f(element)
+      if(elementValue != None) elementValue else first(xs,f)
 		
-		} else {
-			
-			first(xs,f);
-		}
 	}
-
-
 }
 
 

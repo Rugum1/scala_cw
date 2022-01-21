@@ -18,12 +18,9 @@
     import io.Source
     import scala.util._
 
-    def get_january_data(symbol: String, year: Int) : List[String] =
-    {
+    def get_january_data(symbol: String, year: Int) : List[String] = Source.fromFile("./" ++ symbol ++ ".csv").getLines.toList.filter(element => element.startsWith(year.toString + "-01") )
         
-    Source.fromFile("./" ++ symbol ++ ".csv").getLines.toList.filter(element => element.startsWith(year.toString + "-01") )
-        
-    }
+    
 
     // (2) From the output of the get_january_data function, the next function 
     //     should extract the first line (if it exists) and the corresponding
@@ -97,12 +94,10 @@
     //     strategy. Index points to a year in the data list.
 
     def yearly_yield(data: List[List[Option[Double]]], balance: Long, index: Int) : Long = 
-    {
-         
-        val resultArray = data.lift(index).get.map(element => (element.get * (balance/ data.lift(index).get.size)).toLong)
-        
-        balance + resultArray.sum
-           
+    {       
+        val stockList = data.lift(index).get.flatten
+        val resultArray = stockList.map(element => (element * balance/ stockList.size))
+        balance + resultArray.sum.toLong
     }
 
 
@@ -112,11 +107,28 @@
     //     results generated under (6). The function investment calls compound_yield
     //     with the appropriate deltas and the first index.
 
-    def compound_yield(data: List[List[Option[Double]]], balance: Long, index: Int) : Long = ???
+    def compound_yield(data: List[List[Option[Double]]], balance: Long, index: Int) : Long = data match {    
+        
+          case List() =>  balance
+          case delta :: rest => compound_yield(rest,yearly_yield(data,balance,index),index)      
+    }
 
-    def investment(portfolio: List[String], years: Range, start_balance: Long) : Long = ???
+    def investment(portfolio: List[String], years: Range, start_balance: Long) : Long = 
+    {
+         val deltas = get_deltas(get_prices(portfolio,years))
+         compound_yield(deltas,start_balance, 0)
+        
+    }
 
-
+// M1.investment(List("GOOG", "AAPL", "BIDU"), 2000 to 2000, 100) == 100
+// M1.investment(List("GOOG", "AAPL", "BIDU"), 2000 to 2001, 100) == 27
+// M1.investment(List("GOOG", "AAPL", "BIDU"), 2000 to 2002, 100) == 42
+// M1.investment(List("GOOG", "AAPL", "BIDU"), 2000 to 2003, 100) == 27
+// M1.investment(List("GOOG", "AAPL", "BIDU"), 2000 to 2004, 100) == 38
+// M1.investment(List("GOOG", "AAPL", "BIDU"), 2000 to 2005, 100) == 113
+// M1.investment(List("GOOG", "AAPL", "BIDU"), 2000 to 2006, 100) == 254
+// M1.investment(List("GOOG", "AAPL", "BIDU"), 2000 to 2007, 100) == 349
+// 
 
 
     //Test cases for the two portfolios given above
